@@ -1,3 +1,5 @@
+//返回某集合的所有子集，将上一个集合中加入新的元素产生新的集合，再于上一个集合合并得到
+
 import java.util.ArrayList;
 
 public class AllSubSet9_4_1 {
