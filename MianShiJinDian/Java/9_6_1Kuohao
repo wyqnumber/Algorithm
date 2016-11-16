@@ -1,0 +1,42 @@
+//在字符串最前面和原有每对括号里面插入一对括号，而插入其他位置会与之前情况重复。
+import java.util.HashSet;
+import java.util.Set;
+
+public class Kuohao9_6_1 {
+
+	public static void main(String[] args) {
+		Kuohao9_6_1 testAl = new Kuohao9_6_1();
+		Set<String> setResult = testAl.generateParens(3);
+		for (String str: setResult){
+			System.out.println(str);
+		}
+	}
+
+	public Set<String> generateParens(int remaining){
+		Set<String> set = new HashSet<String>();
+		if (remaining == 0){
+			set.add("");
+		}else{
+			Set<String> prev = generateParens(remaining - 1);
+			for (String str : prev){
+				for (int i = 0; i < str.length(); i++){
+					if (str.charAt(i) == '('){
+						String s = insertInside(str, i);
+						set.add(s); //set集合可以自动检测是否重复，重复则不插入
+					}
+				}
+				if (!set.contains("()" + str)){
+					set.add("()" + str);
+				}
+			}
+		}
+		return set;
+	}
+	
+	public static String insertInside(String str, int leftIndex){
+		String left = str.substring(0, leftIndex + 1);
+		String right = str.substring(leftIndex + 1, str.length());
+		return left + "()" +right;
+	}
+	
+}
