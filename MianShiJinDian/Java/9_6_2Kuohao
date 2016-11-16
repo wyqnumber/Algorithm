@@ -1,0 +1,42 @@
+//从头开始构造字符串，从而避免出现重复字符串。逐一加入左括号和右括号，只要字符串仍然有效。
+//字符串中每个索引对应位置插入左括号和右括号，而且绝不会重复索引，所以保证每个字符串都是独一无二的
+import java.util.ArrayList;
+
+public class Kuohao9_6_2 {
+
+	public static void main(String[] args) {
+		Kuohao9_6_2 testAl = new Kuohao9_6_2();
+		ArrayList<String> listResult = testAl.generateParens(3);
+		for (String str : listResult){
+			System.out.println(str);
+		}
+	}
+	
+	public static void addParen(ArrayList<String> list, int leftRem, 
+			int rightRem, char[] str, int count){
+		if (leftRem < 0 || rightRem < leftRem) return;
+		
+		if (leftRem == 0 && rightRem == 0){ //没有括号可用了
+			String s = String.copyValueOf(str);
+			list.add(s);
+		}else{
+			//若还有左括号可用，则加入一个左括号
+			if (leftRem > 0){
+				str[count] = '(';
+				addParen(list, leftRem - 1, rightRem, str, count + 1);
+			}
+			
+			if (rightRem > 0){
+				str[count] = ')';
+				addParen(list, leftRem, rightRem - 1, str, count + 1);
+			}
+		}
+	}
+	
+	public ArrayList<String> generateParens(int count){
+		char[] str = new char[count*2];
+		ArrayList<String> list = new ArrayList<String>();
+		addParen(list, count, count, str, 0);
+		return list;
+	}
+}
