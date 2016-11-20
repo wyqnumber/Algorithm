@@ -1,0 +1,59 @@
+//下面箱子的长宽高要大于上面的
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class Box9_10 {
+
+	public static void main(String[] args) {
+		Box9_10 testAl = new Box9_10();
+	}
+	
+	//将每个箱子作为箱堆底部并搭出可能的最高高度，从而找到箱堆的最高高度
+	public ArrayList<Box> createStackR(Box[] boxes, Box bottom){
+		int max_height = 0;
+		ArrayList<Box> max_stack = null;
+		for (int i = 0; i < boxes.length; i++){
+			if (boxes[i].canBeAbove(bottom)){
+				ArrayList<Box> new_stack = createStackR(boxes, boxes[i]);
+				int new_height = stackHeight(new_stack);
+				if (new_height > max_height){
+					max_stack = new_stack;
+					max_height = new_height;
+				}
+			}
+		}
+		if (max_stack == null){
+			max_stack = new ArrayList<Box>();
+		}
+		if (bottom != null){
+			max_stack.add(0, bottom); //插入箱堆底部
+		}
+		return max_stack;
+	}
+	
+	//使用动态规划避免重复操作
+	public ArrayList<Box> createStackDP(Box[] boxes, Box bottom, HashMap<Box, ArrayList<Box>> stack_map){
+		if (bottom != null && stack_map.containsKey(bottom)){
+			return stack_map.get(bottom);
+		}
+		
+		int max_height = 0;
+		ArrayList<Box> max_stack = null;
+		for (int i = 0; i < boxes.length; i++){
+			if (boxes[i].canBeAbove(bottom)){
+				ArrayList<Box> new_stack = createStackDP(boxes, boxes[i], stack_map);
+				int new_height = stackHeight(new_stack);
+				if (new_height > max_height){
+					max_stack = new_stack;
+					max_height = new_height;
+				}
+			}
+		}
+		
+		if (max_stack == null) max_stack = new ArrayList<Box>();
+		if (bottom != null) max_stack.add(0, bottom);
+		stack_map.put(bottom, max_stack);
+		
+		return (ArrayList<Box>)max_stack.clone(); //即使重写了方法clone()，仍将返回Object实例，因此需要强制转换
+	}
+}
